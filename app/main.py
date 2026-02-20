@@ -14,7 +14,7 @@ app = FastAPI(title=settings.APP_NAME, version=settings.APP_VERSION)
 app.add_middleware(RequestIdMiddleware)
 
 
-@app.on_event("startup")
+@app.on_event("lifespan")
 def on_startup():
     # create tables if they don't exist (sqlite/dev convenience)
     from app.db import init_db
