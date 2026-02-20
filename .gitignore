@@ -9,6 +9,7 @@ __pycache__/
 # local db
 *.db
 *.sqlite3
+jobwatcher.db
 
 # virtual env
 .venv/

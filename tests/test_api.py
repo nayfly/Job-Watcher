@@ -2,17 +2,13 @@ import os
 import sys
 import pytest
 
-# make sure the workspace root is on the path so `import app` works
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 from fastapi.testclient import TestClient
 
 from app.main import app
 
 @pytest.fixture
 def client():
-    with TestClient(app) as c:
-        yield c
+    return TestClient(app)
 
 
 def test_health(client):
