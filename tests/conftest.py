@@ -1,23 +1,14 @@
-import os
-import sys
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-# force test environment
-os.environ["ENV"] = "test"
-
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-if ROOT not in sys.path:
-    sys.path.insert(0, ROOT)
-
-from app.db.base import Base  # noqa: E402
-from app.db import session as db_session  # noqa: E402
+from app.db.base import Base
+import app.db.session as db_session
 
 
 @pytest.fixture(autouse=True)
-def override_db(monkeypatch):
+def isolate_db(monkeypatch):
     engine = create_engine(
         "sqlite:///:memory:",
         connect_args={"check_same_thread": False},
@@ -25,7 +16,9 @@ def override_db(monkeypatch):
     )
 
     TestingSessionLocal = sessionmaker(
-        autocommit=False, autoflush=False, bind=engine
+        autocommit=False,
+        autoflush=False,
+        bind=engine,
     )
 
     monkeypatch.setattr(db_session, "engine", engine)
