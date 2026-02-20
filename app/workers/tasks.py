@@ -16,7 +16,9 @@ def crawl_all_sources() -> None:
     """Entry point for the RQ worker.  Fetches each active source and processes items."""
     db = SessionLocal()
     try:
-        sources = db.query(models.source.Source).filter(models.source.Source.is_active.is_(True)).all()
+        sources = (
+            db.query(models.source.Source).filter(models.source.Source.is_active.is_(True)).all()
+        )
         for src in sources:
             try:
                 _process_source(db, src)
@@ -72,7 +74,11 @@ def _parse_datetime(val: Any) -> Any:
 
 
 def _match_watchlists(db: Session, posting: models.job_posting.JobPosting) -> None:
-    watchlists = db.query(models.watchlist.Watchlist).filter(models.watchlist.Watchlist.is_active.is_(True)).all()
+    watchlists = (
+        db.query(models.watchlist.Watchlist)
+        .filter(models.watchlist.Watchlist.is_active.is_(True))
+        .all()
+    )
     text = posting.title.lower()
     from app.services.notifier import telegram
 
@@ -83,9 +89,7 @@ def _match_watchlists(db: Session, posting: models.job_posting.JobPosting) -> No
                 db.add(alert)
                 # attempt to send notification
                 try:
-                    telegram.send_message(
-                        f"Alert: '{posting.title}' matches watchlist '{wl.name}'"
-                    )
+                    telegram.send_message(f"Alert: '{posting.title}' matches watchlist '{wl.name}'")
                 except Exception:
                     logger.exception("failed to send telegram alert")
     db.commit()

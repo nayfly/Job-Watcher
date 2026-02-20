@@ -14,7 +14,9 @@ def list_watchlists(db: Session = Depends(deps.get_db)):
     return db.query(models.watchlist.Watchlist).all()
 
 
-@router.post("/", response_model=schemas.watchlist.WatchlistRead, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/", response_model=schemas.watchlist.WatchlistRead, status_code=status.HTTP_201_CREATED
+)
 def create_watchlist(
     watchlist_in: schemas.watchlist.WatchlistCreate,
     db: Session = Depends(deps.get_db),

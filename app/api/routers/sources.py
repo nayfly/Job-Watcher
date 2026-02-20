@@ -15,9 +15,7 @@ def list_sources(db: Session = Depends(deps.get_db)):
 
 
 @router.post("/", response_model=schemas.source.SourceRead, status_code=status.HTTP_201_CREATED)
-def create_source(
-    source_in: schemas.source.SourceCreate, db: Session = Depends(deps.get_db)
-):
+def create_source(source_in: schemas.source.SourceCreate, db: Session = Depends(deps.get_db)):
     # check uniqueness
     url_str = str(source_in.url)
     existing = db.query(models.source.Source).filter(models.source.Source.url == url_str).first()

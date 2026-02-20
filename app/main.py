@@ -26,9 +26,7 @@ def on_startup():
 async def metrics_middleware(request: Request, call_next):
     response = await call_next(request)
     # increment basic request counter
-    metrics.request_count.labels(
-        request.method, request.url.path, response.status_code
-    ).inc()
+    metrics.request_count.labels(request.method, request.url.path, response.status_code).inc()
     return response
 
 

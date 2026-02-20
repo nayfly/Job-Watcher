@@ -71,11 +71,7 @@ def test_worker_processing(monkeypatch):
     try:
         jp = db.query(models.job_posting.JobPosting).filter_by(link="http://job/1").one()
         assert jp.fingerprint
-        alert = (
-            db.query(models.alert.Alert)
-            .filter_by(job_posting_id=jp.id)
-            .one()
-        )
+        alert = db.query(models.alert.Alert).filter_by(job_posting_id=jp.id).one()
         assert alert.watchlist_id == r2.json()["id"]
     finally:
         db.close()

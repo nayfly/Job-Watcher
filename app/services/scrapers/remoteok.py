@@ -21,5 +21,6 @@ class RemoteOKScraper(Scraper):
 # convenience
 _scraper = RemoteOKScraper()
 
+
 def fetch_remoteok(url: str) -> List[Dict[str, Any]]:
     return _scraper.fetch(url)

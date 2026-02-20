@@ -32,9 +32,7 @@ class RequestIdMiddleware(BaseHTTPMiddleware):
 def configure_logging() -> None:
     """Configure Python's logging subsystem for structured output."""
 
-    fmt = (
-        "%(asctime)s %(levelname)s %(name)s %(message)s" " [request_id=%(request_id)s]"
-    )
+    fmt = "%(asctime)s %(levelname)s %(name)s %(message)s [request_id=%(request_id)s]"
     handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(logging.Formatter(fmt))
 
