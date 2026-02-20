@@ -1,5 +1,6 @@
 import os
 import sys
+import pytest
 
 # make sure the workspace root is on the path so `import app` works
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -8,16 +9,19 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 
-client = TestClient(app)
+@pytest.fixture
+def client():
+    with TestClient(app) as c:
+        yield c
 
 
-def test_health():
+def test_health(client):
     r = client.get("/health/")
     assert r.status_code == 200
     assert r.json() == {"status": "ok"}
 
 
-def test_create_and_list_source():
+def test_create_and_list_source(client):
     payload = {"name": "Example", "url": "http://example.com/feed"}
     r = client.post("/sources/", json=payload)
     assert r.status_code == 201
@@ -29,7 +33,7 @@ def test_create_and_list_source():
     assert len(r2.json()) >= 1
 
 
-def test_worker_processing(monkeypatch):
+def test_worker_processing(monkeypatch, client):
     # set up one source
     payload = {"name": "Example", "url": "http://example.com/feed"}
     r = client.post("/sources/", json=payload)
