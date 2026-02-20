@@ -4,8 +4,6 @@ import sys
 from starlette.requests import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from app.core.config import settings
-
 
 class RequestIdFilter(logging.Filter):
     """Attach a default request_id value to all log records."""

@@ -1,5 +1,5 @@
 from .base import Base
-from .session import engine, SessionLocal
+from .session import engine
 
 
 def init_db():

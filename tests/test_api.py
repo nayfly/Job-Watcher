@@ -1,4 +1,5 @@
-import sys, os
+import os
+import sys
 
 # make sure the workspace root is on the path so `import app` works
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -6,8 +7,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.db import init_db, SessionLocal
-
 
 client = TestClient(app)
 
@@ -43,11 +42,10 @@ def test_worker_processing(monkeypatch):
     # set up one source
     payload = {"name": "Example", "url": "http://example.com/feed"}
     r = client.post("/sources/", json=payload)
-    src = r.json()
+    src_id = r.json()["id"]
+    assert src_id is not None
 
     # monkeypatch fetch_feed to return one entry matching keyword
-    from app.services.scrapers.rss import fetch_feed as real_fetch
-
     def fake_fetch(url):
         return [{"title": "Senior Python Developer", "link": "http://job/1", "published": None}]
 

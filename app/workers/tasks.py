@@ -1,7 +1,7 @@
 import hashlib
 import json
 import logging
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from sqlalchemy.orm import Session
 
@@ -16,7 +16,7 @@ def crawl_all_sources() -> None:
     """Entry point for the RQ worker.  Fetches each active source and processes items."""
     db = SessionLocal()
     try:
-        sources = db.query(models.source.Source).filter(models.source.Source.is_active == True).all()
+        sources = db.query(models.source.Source).filter(models.source.Source.is_active.is_(True)).all()
         for src in sources:
             try:
                 _process_source(db, src)
@@ -72,7 +72,7 @@ def _parse_datetime(val: Any) -> Any:
 
 
 def _match_watchlists(db: Session, posting: models.job_posting.JobPosting) -> None:
-    watchlists = db.query(models.watchlist.Watchlist).filter(models.watchlist.Watchlist.is_active == True).all()
+    watchlists = db.query(models.watchlist.Watchlist).filter(models.watchlist.Watchlist.is_active.is_(True)).all()
     text = posting.title.lower()
     from app.services.notifier import telegram
 

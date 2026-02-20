@@ -4,6 +4,7 @@ from app.core.config import settings
 from app.core.logging import configure_logging, RequestIdMiddleware
 from app.core import metrics
 from app.api.routers import sources, watchlists, alerts, health
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 
 
 # configure logging before anything else
@@ -39,9 +40,6 @@ app.include_router(health.router, prefix="/health", tags=["health"])
 
 
 # expose prometheus metrics as a simple path
-from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
-
-
 @app.get("/metrics")
 def metrics_endpoint():
     return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
