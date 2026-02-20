@@ -27,3 +27,8 @@ dev = [
 
 [tool.ruff]
 line-length = 100
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+exclude = ["alembic*"]
