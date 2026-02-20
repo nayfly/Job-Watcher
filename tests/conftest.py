@@ -49,3 +49,10 @@ def _patch_db(engine, monkeypatch):
         pass
 
     yield
+
+
+@pytest.fixture(autouse=True)
+def _clean_database(engine):
+    with engine.begin() as connection:
+        for table in reversed(Base.metadata.sorted_tables):
+            connection.execute(table.delete())
